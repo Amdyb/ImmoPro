@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
-import { Search, Bell, MapPin, SlidersHorizontal, Heart, ChevronRight, Shield, Home, Key, Layers, Building, Building2, Store } from 'lucide-react'
+import { Search, Bell, MapPin, SlidersHorizontal, Heart, ChevronRight, Shield, Home, Key, Layers, Building, Building2, Store, Plus } from 'lucide-react'
 import { cn, formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -227,6 +227,12 @@ export default function HomePage() {
         </section>
         <div className="h-4" />
       </div>
+
+      {/* Floating Add Button */}
+      <a href="/add-property"
+        className="fixed bottom-24 right-5 z-50 w-14 h-14 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-xl shadow-yellow-400/30 active:scale-95 transition-transform">
+        <Plus size={26} className="text-blue-900" strokeWidth={2.5} />
+      </a>
     </div>
   )
 }
