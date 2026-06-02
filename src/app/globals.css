@@ -2,26 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --blue: #0B3D91;
+    --gold: #F5B700;
+    --white: #FFFFFF;
+    --light: #F5F7FA;
+    --dark: #0F172A;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-[#F5F7FA] dark:bg-[#0F172A] text-slate-900 dark:text-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+@layer components {
+  .btn-primary {
+    @apply bg-[#0B3D91] hover:bg-[#0a3480] text-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 active:scale-95 shadow-lg shadow-[#0B3D91]/20;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .btn-gold {
+    @apply bg-[#F5B700] hover:bg-[#e0a800] text-[#0B3D91] font-bold py-3 px-6 rounded-2xl transition-all duration-200 active:scale-95;
+  }
+
+  .btn-outline {
+    @apply border-2 border-[#0B3D91] text-[#0B3D91] dark:text-white dark:border-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 active:scale-95;
+  }
+
+  .card {
+    @apply bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700;
+  }
+
+  .glass {
+    @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20;
+  }
+
+  .input-field {
+    @apply w-full bg-[#F5F7FA] dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3D91] placeholder:text-slate-400 transition-all duration-200;
+  }
+
+  .badge-verified {
+    @apply inline-flex items-center gap-1 bg-[#0B3D91]/10 text-[#0B3D91] text-xs font-bold px-2 py-1 rounded-full;
+  }
+
+  .badge-gold {
+    @apply inline-flex items-center gap-1 bg-[#F5B700]/10 text-[#F5B700] text-xs font-bold px-2 py-1 rounded-full;
   }
 }
+
+/* Smooth scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #0B3D91; border-radius: 2px; }
+
+/* Bottom nav safe area */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
