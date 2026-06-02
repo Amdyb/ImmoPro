@@ -58,6 +58,24 @@ function playSave() {
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('buy')
+  const [userCity, setUserCity] = useState('Afrique')
+
+  useEffect(() => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + pos.coords.latitude + '&lon=' + pos.coords.longitude + '&format=json&accept-language=fr')
+          .then(r => r.json())
+          .then(data => {
+            const city = data.address?.city || data.address?.town || data.address?.county || data.address?.state || 'Votre ville'
+            const country = data.address?.country || ''
+            setUserCity(city + ', ' + country)
+          })
+          .catch(() => {})
+      },
+      () => {}
+    )
+  }, [])
   const [savedItems, setSavedItems] = useState<string[]>([])
 
   function toggleSave(id: string) {

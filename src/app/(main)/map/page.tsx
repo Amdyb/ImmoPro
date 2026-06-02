@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { useEffect, useRef, useState } from 'react'
-import { Search, SlidersHorizontal, Layers, Locate, X, Shield, ChevronRight } from 'lucide-react'
+import { Search, SlidersHorizontal, Layers, Locate, X, Shield, ChevronRight, MapPin } from 'lucide-react'
 import { cn, formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -42,21 +42,43 @@ export default function MapPage() {
   const [selectedProperty, setSelectedProperty] = useState<typeof properties[0] | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
   const [activeFilter, setActiveFilter] = useState('Tous')
+  const [userCity, setUserCity] = useState('Chargement...')
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null)
   const filters = ['Tous', 'Vente', 'Location']
 
+  // Detect user location
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current) return
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords
+        setUserLocation({ lat: latitude, lng: longitude })
+        // Reverse geocode to get city name
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + latitude + '&lon=' + longitude + '&format=json')
+          .then(r => r.json())
+          .then(data => {
+            const city = data.address?.city || data.address?.town || data.address?.state || 'Votre position'
+            const country = data.address?.country || ''
+            setUserCity(city + ', ' + country)
+          })
+          .catch(() => setUserCity('Position detectee'))
+      },
+      () => setUserCity('Dakar, Senegal')
+    )
+  }, [])
+
+  useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-    if (!apiKey) return
-    const script = document.createElement('script')
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places'
-    script.async = true
-    script.onload = () => {
+    if (!apiKey || mapInstanceRef.current) return
+
+    const initMap = () => {
       if (!mapRef.current) return
       const google = (window as any).google
+      // Use user location if available, else default to Dakar
+      const center = userLocation || { lat: 14.7167, lng: -17.4677 }
       const map = new google.maps.Map(mapRef.current, {
-        center: { lat: 14.7167, lng: -17.4677 },
-        zoom: 12,
+        center,
+        zoom: userLocation ? 13 : 12,
         disableDefaultUI: true,
         styles: [
           { elementType: 'geometry', stylers: [{ color: '#f5f7fa' }] },
@@ -69,6 +91,26 @@ export default function MapPage() {
         ],
       })
       mapInstanceRef.current = map
+
+      // Add user location marker if available
+      if (userLocation) {
+        const userMarker = document.createElement('div')
+        userMarker.innerHTML = '<div style="width:16px;height:16px;background:#0B3D91;border-radius:50%;border:3px solid white;box-shadow:0 0 0 4px rgba(11,61,145,0.2);"></div>'
+        const userOverlay = new google.maps.OverlayView()
+        userOverlay.onAdd = function() { this.getPanes().overlayMouseTarget.appendChild(userMarker) }
+        userOverlay.draw = function() {
+          const projection = this.getProjection()
+          const pos = projection.fromLatLngToDivPixel(new google.maps.LatLng(userLocation.lat, userLocation.lng))
+          if (pos) {
+            userMarker.style.position = 'absolute'
+            userMarker.style.left = (pos.x - 8) + 'px'
+            userMarker.style.top = (pos.y - 8) + 'px'
+          }
+        }
+        userOverlay.setMap(map)
+      }
+
+      // Add property markers
       properties.forEach(p => {
         const priceLabel = formatShortPrice(p.price, p.type)
         const color = p.type === 'rent' ? '#10b981' : '#0B3D91'
@@ -88,15 +130,48 @@ export default function MapPage() {
         overlay.setMap(map)
         markerDiv.addEventListener('click', () => { playTap(); setSelectedProperty(p); map.panTo({ lat: p.lat, lng: p.lng }) })
       })
+
       setMapLoaded(true)
     }
-    document.head.appendChild(script)
-  }, [])
+
+    if ((window as any).google) {
+      initMap()
+    } else {
+      const script = document.createElement('script')
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places'
+      script.async = true
+      script.onload = initMap
+      document.head.appendChild(script)
+    }
+  }, [userLocation])
+
+  function centerOnUser() {
+    playTap()
+    if (userLocation && mapInstanceRef.current) {
+      mapInstanceRef.current.panTo(userLocation)
+      mapInstanceRef.current.setZoom(14)
+    } else {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        setUserLocation(loc)
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.panTo(loc)
+          mapInstanceRef.current.setZoom(14)
+        }
+      })
+    }
+  }
 
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
+      {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-12 pb-3 pointer-events-none">
         <div className="pointer-events-auto">
+          {/* Location indicator */}
+          <div className="flex items-center gap-1.5 mb-2">
+            <MapPin size={12} className="text-yellow-500" />
+            <span className="text-xs font-bold text-white drop-shadow-lg">{userCity}</span>
+          </div>
           <div className="relative mb-3">
             <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
             <input type="text" placeholder="Rechercher dans cette zone..."
@@ -119,21 +194,24 @@ export default function MapPage() {
 
       <div ref={mapRef} className="flex-1 w-full" />
 
+      {/* Map controls */}
       <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-2">
         <button onClick={playTap} className="w-10 h-10 rounded-2xl bg-white/95 backdrop-blur shadow-lg flex items-center justify-center">
           <Layers size={18} className="text-slate-700" />
         </button>
-        <button onClick={playTap} className="w-10 h-10 rounded-2xl bg-white/95 backdrop-blur shadow-lg flex items-center justify-center">
-          <Locate size={18} className="text-slate-700" />
+        <button onClick={centerOnUser} className="w-10 h-10 rounded-2xl bg-white/95 backdrop-blur shadow-lg flex items-center justify-center">
+          <Locate size={18} className="text-blue-900" />
         </button>
       </div>
 
+      {/* Property count */}
       <div className="absolute left-4 bottom-28 z-20">
         <div className="bg-white/95 backdrop-blur rounded-2xl px-3 py-2 shadow-lg">
           <p className="text-xs font-black text-slate-700">{properties.length} biens</p>
         </div>
       </div>
 
+      {/* Selected property card */}
       {selectedProperty && (
         <div className="absolute bottom-20 left-4 right-4 z-20">
           <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
