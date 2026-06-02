@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { ArrowLeft, Heart, Share2, Shield, MapPin, Bed, Bath, Maximize, Phone, MessageCircle, Calendar, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'

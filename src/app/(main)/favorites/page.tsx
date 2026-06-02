@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { Heart, MapPin, Shield, Trash2 } from 'lucide-react'
 import { cn, formatPrice } from '@/lib/utils'
 import Link from 'next/link'

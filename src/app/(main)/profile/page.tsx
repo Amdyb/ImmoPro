@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { Shield, Star, Home, Key, Settings, ChevronRight, Bell, Moon, Globe, LogOut, Edit3, Award } from 'lucide-react'
 import { cn } from '@/lib/utils'
