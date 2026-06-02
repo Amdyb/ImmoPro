@@ -1,3 +1,5 @@
+'use client'
+
 export default function AmdyLabsFooter() {
   return (
     <div className="flex items-center justify-center gap-2 py-5 border-t border-slate-100 dark:border-slate-800 mt-4">
