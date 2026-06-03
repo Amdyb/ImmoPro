@@ -56,10 +56,10 @@ export function AdBannerCard({ className }: { className?: string }) {
       <div className="relative h-36 overflow-hidden">
         <img
           src={[
-            'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
-            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+            '/senegindia-1.png',
+            '/senegindia-2.png',
             'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&q=80',
-          ][current]}
+          ][current] || '/senegindia-1.png'}
           alt="SenegIndia"
           className="w-full h-full object-cover"
         />
