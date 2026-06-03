@@ -112,10 +112,12 @@ export default function HomePage() {
               <h1 className="text-lg font-black text-slate-900 dark:text-white leading-tight">ImmoPro</h1>
             </div>
           </div>
-          <button onClick={playTap} className="relative w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-            <Bell size={18} className="text-slate-700 dark:text-white" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full" />
-          </button>
+          <a href="/notifications">
+            <button onClick={playTap} className="relative w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+              <Bell size={18} className="text-slate-700 dark:text-white" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full" />
+            </button>
+          </a>
         </div>
         <div className="relative">
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
