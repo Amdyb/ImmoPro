@@ -1,14 +1,19 @@
 {
   "name": "ImmoPro",
   "short_name": "ImmoPro",
-  "description": "La plateforme immobilière premium pour l'Afrique",
+  "description": "La plateforme immobiliere premium pour l Afrique",
   "start_url": "/home",
   "display": "standalone",
   "background_color": "#0B3D91",
   "theme_color": "#0B3D91",
   "orientation": "portrait",
   "icons": [
-    { "src": "/logo.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
-  ]
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [
+    { "src": "/logo.png", "sizes": "1254x1254", "type": "image/png" }
+  ],
+  "categories": ["real estate", "lifestyle", "business"],
+  "lang": "fr"
 }
