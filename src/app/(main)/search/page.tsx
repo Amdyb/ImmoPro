@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useState } from 'react'
 import { Search, MapPin, Heart, Shield, X } from 'lucide-react'
+import { AdBannerStrip } from '@/components/ads/AdBanner'
 import { cn, formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 
