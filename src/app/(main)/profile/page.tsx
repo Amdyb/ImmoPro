@@ -27,6 +27,8 @@ const menuItems = [
   { icon: Star, label: 'Mes avis', desc: '12 avis recus', href: '/my-reviews' },
   { icon: Award, label: 'Passeport Locataire', desc: 'Score: 4.6 / 5', href: '/passport' },
   { icon: Zap, label: 'Mon abonnement', desc: 'Plan Gratuit - Mettre a niveau', href: '/subscription' },
+  { icon: Shield, label: 'Verification terrain', desc: 'Obtenez le badge verifie', href: '/land-verification' },
+  { icon: Star, label: 'Centre de litiges', desc: 'Signaler un probleme', href: '/disputes' },
 ]
 
 const settingsItems = [
