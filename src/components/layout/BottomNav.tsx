@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Search, Map, Heart, User } from 'lucide-react'
+import { Home, Search, Map, MessageCircle, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 function playTap() {
@@ -23,7 +23,7 @@ const navItems = [
   { href: '/home', icon: Home, label: 'Accueil' },
   { href: '/search', icon: Search, label: 'Rechercher' },
   { href: '/map', icon: Map, label: 'Carte' },
-  { href: '/favorites', icon: Heart, label: 'Favoris' },
+  { href: '/messages', icon: MessageCircle, label: 'Messages' },
   { href: '/profile', icon: User, label: 'Profil' },
 ]
 
@@ -36,8 +36,11 @@ export default function BottomNav() {
           const active = pathname === href
           return (
             <Link key={href} href={href} onClick={playTap}
-              className={cn('flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px]',
+              className={cn('flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px] relative',
                 active ? 'bg-blue-900/5' : '')}>
+              {href === '/messages' && (
+                <span className="absolute top-1.5 right-2.5 w-2 h-2 bg-blue-900 rounded-full" />
+              )}
               <Icon size={22} strokeWidth={active ? 2.5 : 1.8}
                 className={active ? 'text-blue-900 dark:text-yellow-400' : 'text-slate-400'} />
               <span className={cn('text-xs', active ? 'font-black text-blue-900 dark:text-yellow-400' : 'font-semibold text-slate-400')}>
