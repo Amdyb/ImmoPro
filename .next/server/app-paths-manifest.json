@@ -1,1 +1,25 @@
-{}
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/onboarding/page": "app/(auth)/onboarding/page.js",
+  "/(auth)/register/page": "app/(auth)/register/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/(main)/book-visit/[id]/page": "app/(main)/book-visit/[id]/page.js",
+  "/(main)/dashboard/page": "app/(main)/dashboard/page.js",
+  "/(main)/favorites/page": "app/(main)/favorites/page.js",
+  "/(main)/home/page": "app/(main)/home/page.js",
+  "/(main)/disputes/page": "app/(main)/disputes/page.js",
+  "/(main)/add-property/page": "app/(main)/add-property/page.js",
+  "/(main)/agent/[id]/page": "app/(main)/agent/[id]/page.js",
+  "/(main)/map/page": "app/(main)/map/page.js",
+  "/(main)/passport/page": "app/(main)/passport/page.js",
+  "/(main)/profile/page": "app/(main)/profile/page.js",
+  "/(main)/messages/page": "app/(main)/messages/page.js",
+  "/(main)/notifications/page": "app/(main)/notifications/page.js",
+  "/(main)/land-verification/page": "app/(main)/land-verification/page.js",
+  "/(main)/subscription/page": "app/(main)/subscription/page.js",
+  "/(main)/property/[id]/page": "app/(main)/property/[id]/page.js",
+  "/(main)/search/page": "app/(main)/search/page.js"
+}
