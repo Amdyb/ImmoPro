@@ -7,6 +7,7 @@ import { Search, Bell, MapPin, SlidersHorizontal, Heart, ChevronRight, Shield, H
 import { cn, formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 import { useProperties } from '@/hooks/useProperties'
+import { getPropertyImage } from '@/lib/propertyImages'
 import { AdBannerCard, AdBannerStrip } from '@/components/ads/AdBanner'
 
 const categories = [
@@ -181,7 +182,8 @@ export default function HomePage() {
               {featured.slice(0, 5).map((p) => (
                 <Link key={p.id} href={'/property/' + p.id} className="flex-shrink-0 w-52" onClick={playTap}>
                   <div className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div className={cn('h-36 bg-gradient-to-br relative', gradients[p.property_type] || 'from-slate-400 to-slate-600')}>
+                    <div className="h-36 relative overflow-hidden bg-slate-200">
+                      <img src={p.photos?.[0] || getPropertyImage(p.property_type)} alt={p.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none' }} />
                       {p.is_verified && (
                         <div className="absolute top-2.5 left-2.5">
                           <span className="flex items-center gap-1 bg-white/90 text-blue-900 text-xs font-black px-2 py-0.5 rounded-full">
@@ -240,7 +242,9 @@ export default function HomePage() {
               {filteredRecent.slice(0, 6).map((p) => (
                 <Link key={p.id} href={'/property/' + p.id} onClick={playTap}>
                   <div className="bg-white dark:bg-slate-800 rounded-3xl flex overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 active:scale-[0.98] transition-transform">
-                    <div className={cn('w-24 h-24 flex-shrink-0 bg-gradient-to-br', gradients[p.property_type] || 'from-slate-400 to-slate-600')} />
+                    <div className="w-24 h-24 flex-shrink-0 overflow-hidden bg-slate-200">
+                    <img src={p.photos?.[0] || getPropertyImage(p.property_type)} alt={p.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none' }} />
+                  </div>
                     <div className="flex-1 p-3">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="font-black text-slate-900 dark:text-white text-sm leading-tight">{p.title}</h3>
