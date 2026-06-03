@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { useState } from 'react'
-import { Shield, Star, Home, Key, Settings, ChevronRight, Bell, Moon, Globe, LogOut, Edit3, Award } from 'lucide-react'
+import { Shield, Star, Home, Key, Settings, ChevronRight, Bell, Moon, Globe, LogOut, Edit3, Award, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -26,6 +26,7 @@ const menuItems = [
   { icon: Key, label: 'Mes locations', desc: '1 contrat actif', href: '/my-leases' },
   { icon: Star, label: 'Mes avis', desc: '12 avis recus', href: '/my-reviews' },
   { icon: Award, label: 'Passeport Locataire', desc: 'Score: 4.6 / 5', href: '/passport' },
+  { icon: Zap, label: 'Mon abonnement', desc: 'Plan Gratuit - Mettre a niveau', href: '/subscription' },
 ]
 
 const settingsItems = [
