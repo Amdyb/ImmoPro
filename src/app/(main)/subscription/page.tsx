@@ -140,7 +140,10 @@ export default function SubscriptionPage() {
           </button>
           <h1 className="text-white text-xl font-black">Abonnements</h1>
         </div>
-        <p className="text-white/70 text-sm mb-5">Choisissez le plan adapte a votre activite</p>
+        <p className="text-white/70 text-sm mb-2">Choisissez le plan adapte a votre activite</p>
+        <div className="flex items-center gap-2 bg-emerald-500/20 rounded-xl px-3 py-2 w-fit">
+          <span className="text-emerald-300 text-xs font-black">100% GRATUIT pour les locataires et acheteurs</span>
+        </div>
 
         {/* Billing toggle */}
         <div className="flex items-center gap-3 bg-white/10 rounded-2xl p-1 w-fit">
