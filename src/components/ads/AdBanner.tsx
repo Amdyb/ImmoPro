@@ -52,27 +52,37 @@ export function AdBannerCard({ className }: { className?: string }) {
 
   return (
     <div className={cn('relative rounded-3xl overflow-hidden shadow-xl', className)}>
+      {/* Hero Image */}
+      <div className="relative h-36 overflow-hidden">
+        <img
+          src={[
+            'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+            'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&q=80',
+          ][current]}
+          alt="SenegIndia"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f2347]/90 to-[#0f2347]/20" />
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: ad.accent }}>
+            <Building size={14} className="text-white" />
+          </div>
+          <span className="text-white font-black text-sm">{ad.brand}</span>
+        </div>
+        <button onClick={() => setDismissed(true)} className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.2)' }}>
+          <X size={12} className="text-white" />
+        </button>
+        <div className="absolute bottom-3 left-3">
+          <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ background: ad.accent + '99' }}>{ad.badge}</span>
+        </div>
+      </div>
+
       {/* Background */}
-      <div className={cn('bg-gradient-to-br p-5', ad.color)}>
+      <div className={cn('bg-gradient-to-br p-4', ad.color)}>
         {/* Decorative circles */}
         <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: ad.accent, transform: 'translate(30%, -30%)' }} />
         <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full opacity-5" style={{ background: ad.accent, transform: 'translate(-30%, 30%)' }} />
-
-        {/* Top row */}
-        <div className="flex items-start justify-between mb-4 relative z-10">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: ad.accent }}>
-              <Building size={18} className="text-white" />
-            </div>
-            <div>
-              <p className="text-white font-black text-sm">{ad.brand}</p>
-              <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white/80" style={{ background: 'rgba(255,255,255,0.15)' }}>{ad.badge}</span>
-            </div>
-          </div>
-          <button onClick={() => setDismissed(true)} className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.15)' }}>
-            <X size={12} className="text-white" />
-          </button>
-        </div>
 
         {/* Content */}
         <div className="relative z-10">
