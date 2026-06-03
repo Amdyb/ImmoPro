@@ -38,7 +38,18 @@ export default function RegisterPage() {
       options: { data: { full_name: fullName, phone, role } }
     })
     if (error) { toast.error(error.message) }
-    else { toast.success('Compte cree'); router.push('/home') }
+    else {
+      toast.success('Compte cree!')
+      // Send WhatsApp welcome
+      if (phone) {
+        fetch('/api/whatsapp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'welcome', phone, data: { userName: fullName } })
+        }).catch(() => {})
+      }
+      router.push('/home')
+    }
     setLoading(false)
   }
 

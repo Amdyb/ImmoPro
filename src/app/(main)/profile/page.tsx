@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { useState } from 'react'
-import { Shield, Star, Home, Key, Settings, ChevronRight, Bell, Moon, Globe, LogOut, Edit3, Award, Zap } from 'lucide-react'
+import { Shield, Star, Home, Key, Settings, ChevronRight, Bell, Moon, Globe, LogOut, Edit3, Award, Zap, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -28,6 +28,7 @@ const menuItems = [
   { icon: Award, label: 'Passeport Locataire', desc: 'Score: 4.6 / 5', href: '/passport' },
   { icon: Zap, label: 'Mon abonnement', desc: 'Plan Gratuit - Mettre a niveau', href: '/subscription' },
   { icon: Shield, label: 'Verification terrain', desc: 'Obtenez le badge verifie', href: '/land-verification' },
+  { icon: BarChart3, label: 'Analytics', desc: 'Performance de vos annonces', href: '/analytics' },
   { icon: Star, label: 'Centre de litiges', desc: 'Signaler un probleme', href: '/disputes' },
 ]
 

@@ -106,14 +106,25 @@ export default function BookVisitPage({ params }: { params: { id: string } }) {
       status: 'pending',
     })
 
-    if (error) {
-      console.error(error)
-      // Still show success for better UX
-      playSuccess()
-      setConfirmed(true)
-    } else {
-      playSuccess()
-      setConfirmed(true)
+    playSuccess()
+    setConfirmed(true)
+
+    // Send WhatsApp confirmation
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.phone) {
+      fetch('/api/whatsapp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'visit_confirmed',
+          phone: user.phone,
+          data: {
+            propertyTitle: 'Votre bien',
+            date: dateStr,
+            time: selectedTime
+          }
+        })
+      }).catch(() => {})
     }
     setSubmitting(false)
   }
