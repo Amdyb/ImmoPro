@@ -26,7 +26,7 @@ const mockAgent = {
   id: '1',
   name: 'Mamadou Ba',
   title: 'Agent Immobilier Senior',
-  agency: 'Century 21 Dakar',
+  agency: 'ImmoPro Certified Agent',
   phone: '+221 77 123 45 67',
   email: 'mamadou.ba@century21.sn',
   location: 'Dakar, Senegal',
@@ -112,7 +112,7 @@ export default function AgentPage({ params }: { params: { id: string } }) {
                 )}
               </div>
               <p className="text-slate-500 text-sm">{agent.title}</p>
-              <p className="text-blue-900 dark:text-yellow-400 text-xs font-bold">{agent.agency}</p>
+              <p className="text-blue-900 dark:text-yellow-400 text-xs font-bold">ImmoPro Certified Agent</p>
             </div>
           </div>
 
