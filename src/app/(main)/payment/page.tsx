@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { ArrowLeft, CheckCircle, Phone, Smartphone, CreditCard, Shield, Zap } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -35,9 +35,10 @@ const plans: Record<string, { name: string, price: number, features: string[] }>
   premium: { name: 'Premium', price: 35000, features: ['Tout Pro', 'Page agence', 'Gestionnaire dedie'] },
 }
 
-export default function PaymentPage() {
+function PaymentContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  if (!searchParams) return null
   const planId = searchParams.get('plan') || 'starter'
   const plan = plans[planId] || plans.starter
 
@@ -196,5 +197,13 @@ export default function PaymentPage() {
         <div className="h-8" />
       </div>
     </div>
+  )
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><div className="w-10 h-10 border-4 border-blue-900/20 border-t-blue-900 rounded-full animate-spin" /></div>}>
+      <PaymentContent />
+    </Suspense>
   )
 }
