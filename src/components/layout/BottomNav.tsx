@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Search, Map, MessageCircle, User } from 'lucide-react'
+import { Home, Search, Map, MessageCircle, User, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 function playTap() {
@@ -22,7 +22,7 @@ function playTap() {
 const navItems = [
   { href: '/home', icon: Home, label: 'Accueil' },
   { href: '/search', icon: Search, label: 'Rechercher' },
-  { href: '/map', icon: Map, label: 'Carte' },
+  { href: '/meuble', icon: Star, label: 'Meubles' },
   { href: '/messages', icon: MessageCircle, label: 'Messages' },
   { href: '/profile', icon: User, label: 'Profil' },
 ]
