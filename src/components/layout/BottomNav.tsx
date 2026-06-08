@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Search, Map, MessageCircle, User, Star } from 'lucide-react'
+import { Home, Search, Map, MessageCircle, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 function playTap() {
   try {
     const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
-    const o = ctx.createOscillator()
-    const g = ctx.createGain()
+    const o = ctx.createOscillator(); const g = ctx.createGain()
     o.connect(g); g.connect(ctx.destination)
     o.frequency.setValueAtTime(700, ctx.currentTime)
     o.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.08)
@@ -22,7 +21,7 @@ function playTap() {
 const navItems = [
   { href: '/home', icon: Home, label: 'Accueil' },
   { href: '/search', icon: Search, label: 'Rechercher' },
-  { href: '/meuble', icon: Star, label: 'Meubles' },
+  { href: '/map', icon: Map, label: 'Carte' },
   { href: '/messages', icon: MessageCircle, label: 'Messages' },
   { href: '/profile', icon: User, label: 'Profil' },
 ]
@@ -33,7 +32,7 @@ export default function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800">
       <div className="flex items-center justify-around py-2 px-2 max-w-lg mx-auto">
         {navItems.map(({ href, icon: Icon, label }) => {
-          const active = pathname === href
+          const active = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link key={href} href={href} onClick={playTap}
               className={cn('flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px] relative',

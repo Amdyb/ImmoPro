@@ -3,12 +3,12 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
-import { MapPin, Shield, Heart, Bell, ChevronRight, Search, Plus } from 'lucide-react'
+import { MapPin, Shield, Heart, Bell, ChevronRight, Search, Plus, Star, Home, Building, Trees, Key, Tag } from 'lucide-react'
 import { cn, formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { getPropertyImage } from '@/lib/propertyImages'
-import { AdBannerCard } from '@/components/ads/AdBanner'
+import { AdBannerCard, AdBannerStrip } from '@/components/ads/AdBanner'
 
 function playTap() {
   try {
@@ -76,9 +76,9 @@ function PropertyCard({ p, saved, onSave }: { p: any, saved: boolean, onSave: ()
   )
 }
 
-function Row({ title, emoji, properties, link, saved, onSave }: {
+function Row({ title, icon: Icon, properties, link, saved, onSave }: {
   title: string
-  emoji: string
+  icon: any
   properties: any[]
   link: string
   saved: string[]
@@ -89,7 +89,9 @@ function Row({ title, emoji, properties, link, saved, onSave }: {
     <div className="mb-6">
       <div className="flex items-center justify-between px-5 mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-lg">{emoji}</span>
+          <div className="w-7 h-7 rounded-xl bg-blue-900/10 dark:bg-blue-900/30 flex items-center justify-center">
+            <Icon size={14} className="text-blue-900 dark:text-yellow-400" />
+          </div>
           <h2 className="text-base font-black text-slate-900 dark:text-white">{title}</h2>
         </div>
         <Link href={link} onClick={playTap}>
@@ -98,12 +100,26 @@ function Row({ title, emoji, properties, link, saved, onSave }: {
           </span>
         </Link>
       </div>
-      <div className="flex gap-3 overflow-x-auto px-5 pb-2"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="flex gap-3 overflow-x-auto px-5 pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {properties.map(p => (
           <PropertyCard key={p.id} p={p} saved={saved.includes(p.id)} onSave={() => onSave(p.id)} />
         ))}
       </div>
+    </div>
+  )
+}
+
+function HeroSection({ variant }: { variant: 'primary' | 'secondary' }) {
+  if (variant === 'primary') {
+    return (
+      <div className="mx-5 mb-6">
+        <AdBannerCard />
+      </div>
+    )
+  }
+  return (
+    <div className="mx-5 mb-6">
+      <AdBannerStrip />
     </div>
   )
 }
@@ -114,8 +130,13 @@ export default function HomePage() {
   const [location, setLocation] = useState('Afrique')
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<Record<string, any[]>>({
-    meuble: [], featured: [], villas: [], apartments: [],
-    terrains: [], saly: [], international: [], recent: []
+    featured: [],
+    apptRent: [],
+    meuble: [],
+    houseRent: [],
+    houseSale: [],
+    terrains: [],
+    champs: [],
   })
 
   useEffect(() => {
@@ -132,15 +153,15 @@ export default function HomePage() {
       .select('*')
       .eq('status', 'available')
     if (!all) { setLoading(false); return }
+
     setData({
+      featured: all.filter(p => p.is_featured).slice(0, 12),
+      apptRent: all.filter(p => p.property_type === 'apartment' && p.listing_type === 'rent' && !p.is_meuble).slice(0, 12),
       meuble: all.filter(p => p.is_meuble).sort((a, b) => (b.waitlist_count || 0) - (a.waitlist_count || 0)).slice(0, 12),
-      featured: all.filter(p => p.is_featured && !p.is_meuble).slice(0, 12),
-      villas: all.filter(p => p.property_type === 'villa' && !p.is_meuble).slice(0, 12),
-      apartments: all.filter(p => p.property_type === 'apartment' && !p.is_meuble).slice(0, 12),
-      terrains: all.filter(p => p.property_type === 'land').slice(0, 12),
-      saly: all.filter(p => ['Saly', 'Lac Rose', 'Mbour', 'Ziguinchor', 'Saint-Louis'].includes(p.city || '')).slice(0, 12),
-      international: all.filter(p => !['SN'].includes(p.country || '')).slice(0, 12),
-      recent: [...all].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 12),
+      houseRent: all.filter(p => ['house', 'villa'].includes(p.property_type) && p.listing_type === 'rent' && !p.is_meuble).slice(0, 12),
+      houseSale: all.filter(p => ['house', 'villa', 'apartment'].includes(p.property_type) && p.listing_type === 'sale').slice(0, 12),
+      terrains: all.filter(p => p.property_type === 'land' && !p.is_agricultural).slice(0, 12),
+      champs: all.filter(p => p.property_type === 'land' && p.is_agricultural).slice(0, 12),
     })
     setLoading(false)
   }
@@ -183,7 +204,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Search bar — tap to go to search */}
+        {/* Search bar */}
         <Link href="/search" onClick={playTap}>
           <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-3">
             <Search size={16} className="text-slate-400 flex-shrink-0" />
@@ -193,31 +214,9 @@ export default function HomePage() {
       </div>
 
       <div className="py-5">
-
-        {/* Category pills */}
-        <div className="flex gap-2 overflow-x-auto px-5 pb-3 mb-3" style={{ scrollbarWidth: 'none' }}>
-          {[
-            { label: 'Meubles', href: '/meuble' },
-            { label: 'Vente', href: '/search' },
-            { label: 'Location', href: '/search' },
-            { label: 'Villas', href: '/search' },
-            { label: 'Terrains', href: '/search' },
-            { label: 'Carte', href: '/map' },
-          ].map(({ label, href }, i) => (
-            <Link key={label} href={href} onClick={playTap}>
-              <span className={cn('flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all',
-                i === 0
-                  ? 'bg-blue-900 text-white'
-                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700')}>
-                {label}
-              </span>
-            </Link>
-          ))}
-        </div>
-
         {loading ? (
           <div className="space-y-8 px-5">
-            {[1, 2, 3].map(i => (
+            {[1, 2, 3, 4].map(i => (
               <div key={i}>
                 <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded-xl w-40 mb-3 animate-pulse" />
                 <div className="flex gap-3">
@@ -230,22 +229,34 @@ export default function HomePage() {
           </div>
         ) : (
           <>
-            <Row title="Appartements Meubles" emoji="🛋" properties={data.meuble} link="/meuble" saved={saved} onSave={toggleSave} />
+            {/* 1 — En Vedette */}
+            <Row title="En Vedette" icon={Star} properties={data.featured} link="/search" saved={saved} onSave={toggleSave} />
 
-            <div className="px-5 mb-6">
-              <AdBannerCard />
-            </div>
+            {/* 2 — Appartements a louer */}
+            <Row title="Appartements a Louer" icon={Building} properties={data.apptRent} link="/search" saved={saved} onSave={toggleSave} />
 
-            <Row title="En Vedette" emoji="⭐" properties={data.featured} link="/search" saved={saved} onSave={toggleSave} />
-            <Row title="Villas de Prestige" emoji="🏛" properties={data.villas} link="/search" saved={saved} onSave={toggleSave} />
-            <Row title="Appartements" emoji="🏢" properties={data.apartments} link="/search" saved={saved} onSave={toggleSave} />
-            <Row title="Cote et Plages" emoji="🏖" properties={data.saly} link="/search" saved={saved} onSave={toggleSave} />
-            <Row title="Terrains et Champs" emoji="🌍" properties={data.terrains} link="/search" saved={saved} onSave={toggleSave} />
-            <Row title="Afrique et International" emoji="✈" properties={data.international} link="/search" saved={saved} onSave={toggleSave} />
-            <Row title="Nouveaux Logements" emoji="🆕" properties={data.recent} link="/search" saved={saved} onSave={toggleSave} />
+            {/* 3 — Appartements Meubles */}
+            <Row title="Appartements Meubles" icon={Key} properties={data.meuble} link="/meuble" saved={saved} onSave={toggleSave} />
+
+            {/* Hero Ad 1 */}
+            <HeroSection variant="primary" />
+
+            {/* 4 — Maisons a louer */}
+            <Row title="Maisons a Louer" icon={Home} properties={data.houseRent} link="/search" saved={saved} onSave={toggleSave} />
+
+            {/* 5 — Maisons a vendre */}
+            <Row title="Maisons a Vendre" icon={Tag} properties={data.houseSale} link="/search" saved={saved} onSave={toggleSave} />
+
+            {/* Hero Ad 2 */}
+            <HeroSection variant="secondary" />
+
+            {/* 6 — Terrains */}
+            <Row title="Terrains" icon={MapPin} properties={data.terrains} link="/search" saved={saved} onSave={toggleSave} />
+
+            {/* 7 — Champs */}
+            <Row title="Champs Agricoles" icon={Trees} properties={data.champs} link="/search" saved={saved} onSave={toggleSave} />
           </>
         )}
-
         <div className="h-24" />
       </div>
 
