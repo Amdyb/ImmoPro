@@ -155,13 +155,13 @@ export default function HomePage() {
     if (!all) { setLoading(false); return }
 
     setData({
-      featured: all.filter(p => p.is_featured).slice(0, 12),
-      apptRent: all.filter(p => p.property_type === 'apartment' && p.listing_type === 'rent' && !p.is_meuble).slice(0, 12),
-      meuble: all.filter(p => p.is_meuble).sort((a, b) => (b.waitlist_count || 0) - (a.waitlist_count || 0)).slice(0, 12),
-      houseRent: all.filter(p => ['house', 'villa'].includes(p.property_type) && p.listing_type === 'rent' && !p.is_meuble).slice(0, 12),
-      houseSale: all.filter(p => ['house', 'villa', 'apartment'].includes(p.property_type) && p.listing_type === 'sale').slice(0, 12),
-      terrains: all.filter(p => p.property_type === 'land' && !p.is_agricultural).slice(0, 12),
-      champs: all.filter(p => p.property_type === 'land' && p.is_agricultural).slice(0, 12),
+      featured: all.filter(p => p.is_featured).slice(0, 8),
+      apptRent: all.filter(p => p.property_type === 'apartment' && p.listing_type === 'rent' && !p.is_meuble).slice(0, 8),
+      meuble: all.filter(p => p.is_meuble).sort((a, b) => (b.waitlist_count || 0) - (a.waitlist_count || 0)).slice(0, 8),
+      houseRent: all.filter(p => ['house', 'villa'].includes(p.property_type) && p.listing_type === 'rent' && !p.is_meuble).slice(0, 8),
+      houseSale: all.filter(p => ['house', 'villa', 'apartment'].includes(p.property_type) && p.listing_type === 'sale').slice(0, 8),
+      terrains: all.filter(p => p.property_type === 'land' && !p.is_agricultural).slice(0, 8),
+      champs: all.filter(p => p.property_type === 'land' && p.is_agricultural).slice(0, 8),
     })
     setLoading(false)
   }
