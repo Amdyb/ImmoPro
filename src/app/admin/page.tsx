@@ -231,6 +231,11 @@ export default function AdminPage() {
                           <Eye size={13} /> Voir
                         </button>
                       </a>
+                      <a href={'/edit-property/' + p.id}>
+                        <button onClick={playTap} className="flex items-center gap-1.5 bg-blue-900/50 text-blue-400 hover:bg-blue-900 text-xs font-bold px-3 py-2 rounded-xl transition-all">
+                          <Eye size={13} /> Editer
+                        </button>
+                      </a>
                       <button onClick={() => toggleVerify(p.id, p.is_verified)}
                         className={cn('flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl transition-all',
                           p.is_verified ? 'bg-rose-900/50 text-rose-400 hover:bg-rose-900' : 'bg-emerald-900/50 text-emerald-400 hover:bg-emerald-900')}>
