@@ -157,20 +157,20 @@ export default function LandingPage() {
               </div>
 
               <h1 className="text-5xl md:text-6xl font-black text-white leading-tight mb-6">
-                Trouvez votre bien a{' '}
+                Trouvez votre logement a{' '}
                 <span className="text-yellow-400 block mt-1 transition-all duration-500">
                   {cities[cityIndex]}
                 </span>
               </h1>
 
               <p className="text-white/70 text-lg mb-8 leading-relaxed">
-                Achetez, louez ou vendez en toute confiance. Biens verifies, proprietaires certifies. <span className="text-yellow-400 font-bold">100% gratuit</span> pour les acheteurs et locataires.
+                Trouvez votre logement ou publiez votre annonce en toute confiance. Biens verifies, proprietaires certifies. <span className="text-yellow-400 font-bold">100% gratuit</span> pour les acheteurs et locataires.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-8">
                 <Link href="/home">
                   <button onClick={playTap} className="bg-yellow-400 text-blue-900 font-black text-base px-8 py-4 rounded-2xl flex items-center gap-2 justify-center active:scale-95 transition-transform shadow-xl shadow-yellow-400/20 w-full sm:w-auto">
-                    Voir les biens <ArrowRight size={20} />
+                    Voir les logements <ArrowRight size={20} />
                   </button>
                 </Link>
                 <Link href="/register">
@@ -187,7 +187,7 @@ export default function LandingPage() {
                   <span className="text-white/60 text-xs ml-1">4.9/5</span>
                 </div>
                 <span className="text-white/30">·</span>
-                <span className="text-white/60 text-xs">51+ annonces actives</span>
+                <span className="text-white/60 text-xs">51+ logements actifs</span>
                 <span className="text-white/30">·</span>
                 <span className="text-white/60 text-xs">20 villes couvertes</span>
               </div>
