@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Check, Save, Trash2, Star, Shield } from 'lucide-react'
+import { ArrowLeft, Check, Save, Trash2, Star, Shield, Upload, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
@@ -50,6 +50,8 @@ export default function EditPropertyPage({ params }: { params: { id: string } })
   const [saving, setSaving] = useState(false)
   const [property, setProperty] = useState<any>(null)
   const [form, setForm] = useState<any>({})
+  const [newPhotos, setNewPhotos] = useState<{file: File, preview: string}[]>([])
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -74,9 +76,40 @@ export default function EditPropertyPage({ params }: { params: { id: string } })
     }))
   }
 
+  function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || [])
+    files.forEach(file => {
+      if (file.size > 5 * 1024 * 1024) return
+      setNewPhotos(prev => [...prev, { file, preview: URL.createObjectURL(file) }])
+    })
+    e.target.value = ''
+  }
+
+  async function uploadNewPhotos(): Promise<string[]> {
+    const urls: string[] = []
+    for (const photo of newPhotos) {
+      const fileName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.jpg'
+      const { data, error } = await supabase.storage.from('property-photos').upload(fileName, photo.file, { contentType: photo.file.type })
+      if (!error && data) {
+        const { data: urlData } = supabase.storage.from('property-photos').getPublicUrl(data.path)
+        urls.push(urlData.publicUrl)
+      }
+    }
+    return urls
+  }
+
   async function handleSave() {
     setSaving(true)
+    let photoUrls = form.photos || []
+    if (newPhotos.length > 0) {
+      setUploadingPhotos(true)
+      const uploaded = await uploadNewPhotos()
+      photoUrls = [...photoUrls, ...uploaded]
+      setUploadingPhotos(false)
+    }
+
     const { error } = await supabase.from('properties').update({
+      photos: photoUrls,
       title: form.title,
       description: form.description,
       price: parseInt(form.price) || 0,
@@ -337,6 +370,55 @@ export default function EditPropertyPage({ params }: { params: { id: string } })
           </>
         )}
 
+        {/* Photos */}
+        <div>
+          <p className="font-black text-slate-900 dark:text-white text-sm mb-2">Photos</p>
+          
+          {/* Existing photos */}
+          {form.photos?.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              {form.photos.map((url: string, i: number) => (
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100">
+                  <img src={url} alt="" className="w-full h-full object-cover" />
+                  <button onClick={() => {
+                    playTap()
+                    setForm((prev: any) => ({ ...prev, photos: prev.photos.filter((_: string, idx: number) => idx !== i) }))
+                  }} className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center">
+                    <X size={12} className="text-white" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* New photos preview */}
+          {newPhotos.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              {newPhotos.map((p, i) => (
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100">
+                  <img src={p.preview} alt="" className="w-full h-full object-cover" />
+                  <div className="absolute top-1 left-1 bg-emerald-500 text-white text-xs px-1.5 py-0.5 rounded-lg font-bold">Nouveau</div>
+                  <button onClick={() => setNewPhotos(prev => prev.filter((_, idx) => idx !== i))}
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center">
+                    <X size={12} className="text-white" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <label className="w-full border-2 border-dashed border-blue-900/30 rounded-2xl p-4 flex items-center gap-3 bg-blue-50 dark:bg-blue-900/10 cursor-pointer">
+            <input type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoSelect} />
+            <div className="w-10 h-10 rounded-xl bg-blue-900/10 flex items-center justify-center flex-shrink-0">
+              <Upload size={18} className="text-blue-900" />
+            </div>
+            <div>
+              <p className="font-black text-blue-900 text-sm">Ajouter des photos</p>
+              <p className="text-slate-400 text-xs">JPG, PNG · Max 5MB</p>
+            </div>
+          </label>
+        </div>
+
         {/* Amenities */}
         <div>
           <p className="font-black text-slate-900 dark:text-white text-sm mb-2">Equipements</p>
@@ -365,8 +447,8 @@ export default function EditPropertyPage({ params }: { params: { id: string } })
         {/* Save */}
         <button onClick={handleSave} disabled={saving}
           className="w-full bg-yellow-400 text-blue-900 font-black py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
-          {saving ? <div className="w-5 h-5 border-2 border-blue-900/30 border-t-blue-900 rounded-full animate-spin" /> : <Save size={18} />}
-          Sauvegarder les modifications
+          {saving || uploadingPhotos ? <div className="w-5 h-5 border-2 border-blue-900/30 border-t-blue-900 rounded-full animate-spin" /> : <Save size={18} />}
+          {uploadingPhotos ? 'Upload photos...' : saving ? 'Sauvegarde...' : 'Sauvegarder les modifications'}
         </button>
 
         {/* Delete */}
